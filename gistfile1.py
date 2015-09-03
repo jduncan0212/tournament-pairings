@@ -67,7 +67,7 @@ def setup_players_and_matches():
     for player in the_players:
         registerPlayerUpdated(player[0], player[1])
 
-    createRandomMatches(the_players, 25)
+    createRandomMatches(the_players, 100)
 
 
 if __name__ == '__main__':

@@ -74,9 +74,9 @@ def playerStandings():
     db_conn = connect()
     db_cursor = db_conn.cursor()
     sql_player_standings = (
-            "select id, name, wins, matches"
+                "select id, name, wins, matches"
                 " from standings"
-                    " order by (3*(wins)+(draws)-(losses)) desc;")
+                " order by (3*(wins)+(draws)-(losses)) desc;")
     db_cursor.execute(sql_player_standings)
     results = db_cursor.fetchall()
     for record in results:
@@ -84,6 +84,7 @@ def playerStandings():
     db_conn.commit()
     db_conn.close()
     return list_of_players
+
 
 def reportMatch(winner, loser, draw=False):
     """Records the outcome of a single match between two players.
@@ -94,9 +95,9 @@ def reportMatch(winner, loser, draw=False):
     """
     db_conn = connect()
     db_cursor = db_conn.cursor()
-    sql_match_report = 'insert into match (winner,loser, draw) values (%s, %s, %s)' % (winner,loser, draw)
-    if draw:
-        sql_match_report = 'insert into match (winner, loser, draw) values (%s, %s, %s)' % (winner, loser, draw)
+    sql_match_report = ('insert into match (winner, loser, draw)'
+                        'values (%s, %s, %s)'
+                        % (winner, loser, draw))
     db_cursor.execute(sql_match_report)
     db_conn.commit()
     db_conn.close()
@@ -127,8 +128,18 @@ def swissPairings():
     # A list of entries is returned to us
     # with each entry as a two-item tuple
     all_players = db_cursor.fetchall()
-    atomic_list = [ single for tup in all_players for single in tup]
-    tuple_quad = [(atomic_list[i], atomic_list[i+1], atomic_list[i+2], atomic_list[i+3]) for i in range(0, len(atomic_list)-3, 4)]
+    # I used list comprehensions to:
+    #       1.) separate the result pairs into --> a list of singlets.
+    #       2.) then to add them in to--> a list of tuples, each with four entries.
+    #
+    # The reason I did not use the "Zip" function is becauese I found it more
+    # diffcult to understand than list comphresions and didn't like the
+    # idea of having to rely on something I couldn't quite wrap my head around
+    # :(
+    #
+    atomic_list = [single for tup in all_players for single in tup]
+    tuple_quad = [(atomic_list[i], atomic_list[i+1], atomic_list[i+2],
+                   atomic_list[i+3]) for i in range(0, len(atomic_list)-3, 4)]
     db_conn.commit()
     db_conn.close()
     return tuple_quad

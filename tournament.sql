@@ -89,7 +89,8 @@ create view match_total as select count(match.winner) as total, player.id as id 
 --                  Losses :: -1 points
 --    (in tournament.py)
 
-create view standings as select player.id as id, player.name as name, win_total.wins as wins, draw_total.draws as draws,
+create view standings as select player.id as id, player.name as name, win_total.wins as wins,
+                                draw_total.draws as draws,
                                 loss_total.losses as losses, match_total.total as matches
                                 from player
                                     left join win_total
