@@ -106,25 +106,50 @@ def testReportMatches():
 def testPairings():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Twilight Sparkle")
-    registerPlayer("Fluttershy")
-    registerPlayer("Applejack")
-    registerPlayer("Pinkie Pie")
+    registerPlayer("Twilight Sparkle")      # gets to win rd 1
+    registerPlayer("Fluttershy")            # loses in rd 1
+    registerPlayer("Applejack")             # draws in rd 1
+    registerPlayer("Pinkie Pie")            # draws in rd 1
+
+    ## Added two extra players so we can get two players with one win at the end
+    ## Of round one, incorporating draws
+
+    registerPlayer("Hula Hoop")             # gets to win in rd 1, also
+    registerPlayer("Fluffy Marshmellow")    # loses in rd 1, :(
+
     standings = playerStandings()
-    [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2)
-    reportMatch(id3, id4)
+    [id1, id2, id3, id4, id5, id6] = [row[0] for row in standings]
+    [name1, name2, name3, name4, name5, name6] = [row[1] for row in standings]
+    playerdict = {name1:id1, name2:id2, name3:id3, name4:id4, name5:id5, name6:id6}
+
+    reportMatch(playerdict["Twilight Sparkle"], playerdict["Fluttershy"])
+    # report a draw
+    reportMatch(playerdict["Applejack"], playerdict["Pinkie Pie"], True)
+    reportMatch(playerdict["Hula Hoop"], playerdict["Fluffy Marshmellow"])
     pairings = swissPairings()
-    if len(pairings) != 2:
+    if len(pairings) != 3:
         print pairings
         raise ValueError(
-            "For four players, swissPairings should return two pairs.")
-    [(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4)] = pairings
-    correct_pairs = set([frozenset([id1, id3]), frozenset([id2, id4])])
-    actual_pairs = set([frozenset([pid1, pid2]), frozenset([pid3, pid4])])
+            "For six players, swissPairings should return three pairs.")
+    [(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4), (pid5, pname5, pid6, pname6)] = pairings
+    correct_pairs = set([frozenset([playerdict["Twilight Sparkle"], playerdict["Hula Hoop"]]),
+                            frozenset([playerdict["Applejack"], playerdict["Pinkie Pie"]]),
+                            frozenset([playerdict["Fluttershy"], playerdict["Fluffy Marshmellow"]])])
+
+    actual_pairs = set([frozenset([pid1, pid2]), frozenset([pid3, pid4]), frozenset([pid5, pid6])])
+
+
+    reportMatch(pairings[0][0], pairings[0][2])
+    reportMatch(pairings[1][0], pairings[1][2])
+    reportMatch(pairings[2][0], pairings[2][2])
+
+    # only comparing players with one win, for now --9/2
     if correct_pairs != actual_pairs:
+        print [(p[1],p[3]) for p in pairings]
         raise ValueError(
             "After one match, players with one win should be paired.")
+
+    print [(p[1],p[3]) for p in pairings]
     print "8. After one match, players with one win are paired."
 
 
@@ -136,7 +161,6 @@ if __name__ == '__main__':
     testRegisterCountDelete()
     testStandingsBeforeMatches()
     testReportMatches()
-    #print playerStandings()
     testPairings()
     print "Success!  All tests pass!"
 

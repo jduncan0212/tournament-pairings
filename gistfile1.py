@@ -45,12 +45,21 @@ def createRandomMatches(player_list, num_matches):
         winner_name = player_list[player1_index][1]
         loser_id = player_list[player2_index][0]
         loser_name = player_list[player2_index][1]
-        reportMatch(winner_id, loser_id)
-        print "%s (id=%s) beat %s (id=%s)" % (
-            winner_name,
-            winner_id,
-            loser_name,
-            loser_id)
+        if random.randint(0,1)==1:
+            reportMatch(winner_id, loser_id, True)
+            print "%s (id=%s) draws with %s (id=%s)" % (
+                    winner_name,
+                    winner_id,
+                    loser_name,
+                    loser_id)
+
+        else:
+            reportMatch(winner_id, loser_id)
+            print "%s (id=%s) beat %s (id=%s)" % (
+                                                    winner_name,
+                                                    winner_id,
+                                                    loser_name,
+                                                    loser_id)
 
 
 def setup_players_and_matches():
@@ -58,7 +67,7 @@ def setup_players_and_matches():
     for player in the_players:
         registerPlayerUpdated(player[0], player[1])
 
-    createRandomMatches(the_players, 100)
+    createRandomMatches(the_players, 25)
 
 
 if __name__ == '__main__':
