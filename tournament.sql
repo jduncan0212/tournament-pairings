@@ -37,38 +37,45 @@ create table match ( id SERIAL PRIMARY KEY,
 --                                              player.name as winner_name,
 --                                              count(match.winner) as wins
 
-create view win_total as select player.id as winner_id, player.name as winner_name, count(match.winner) as wins
-                                from player left join match
-                                    on (player.id = match.winner and match.draw = False)
-                                    group by player.id;
+create view win_total as select player.id as winner_id, player.name as winner_name,
+                                count(match.winner) as wins
+                                from player
+                                    left join match
+                                        on (player.id = match.winner and match.draw = False)
+                                        group by player.id;
 
 
 -- Create View loss_total :: table with cols--> player.id as loser_id,
 --                                              player.name as loser_name,
 --                                              count(match.loser) as losses
 
-create view loss_total as select player.id as loser_id, player.name as loser_name, count(match.loser) as losses
-                                    from player left join match
-                                        on (player.id = match.loser and match.draw=False)
-                                        group by player.id;
+create view loss_total as select player.id as loser_id, player.name as loser_name,
+                                    count(match.loser) as losses
+                                    from player
+                                        left join match
+                                            on (player.id = match.loser and match.draw=False)
+                                            group by player.id;
 
 
 -- Create View draw_total :: table with cols--> drawer_id,
 --                                              drawer_name,
 --                                              draws
 
-create view draw_total as select player.id as drawer_id, player.name as drawer_name, count(match.draw) as draws
-                            from player left join match
-                                on ((player.id = match.loser and match.draw = True) or
-                                ( player.id=match.winner and match.draw = True))
-                                group by player.id;
+create view draw_total as select player.id as drawer_id, player.name as drawer_name,
+                            count(match.draw) as draws
+                            from player
+                                left join match
+                                    on ((player.id = match.loser and match.draw = True) or
+                                    ( player.id=match.winner and match.draw = True))
+                                    group by player.id;
 
 
 -- Create View match_total :: table with cols-->    total,
 --                                                  id
 
-create view match_total as select count(match.winner) as total, player.id as id from
-                                    player left join match
+create view match_total as select count(match.winner) as total, player.id as id
+                                from player
+                                    left join match
                                         on player.id=match.winner or player.id=match.loser
                                         group by player.id;
 
