@@ -144,10 +144,8 @@ def swissPairings():
     #       1.) separate the result pairs into --> a list of singlets.
     #       2.) then to add them in to--> a list of tuples, each with 4 entries.
     #
-    # The reason I did not use the "Zip" function is becauese I found it more
-    # diffcult to understand than list comphresions and didn't like the
-    # idea of having to rely on something I couldn't quite wrap my head around
-    # :(
+    # in lieu of the Zip function because I found the former way more
+    # straightforward.
     #
     atomic_list = [single for tup in all_players for single in tup]
     tuple_quad = [(atomic_list[i], atomic_list[i+1], atomic_list[i+2],
