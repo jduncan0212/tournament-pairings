@@ -80,14 +80,14 @@ create view match_total as select count(match.winner) as total, player.id as id 
 --                                              losses,
 --                                              matches
 --
---                  A Complex table that "left joins" player to: win_total (for wins),
---                      draw_total (for draws), loss_total (for losses),
---                      match_total (for matches)
+-- A Complex table that "left joins" player to: win_total (for wins),
+--                                              draw_total (for draws), loss_total (for losses),
+--                                              match_total (for matches)
 
 -- Ordered by Values  Wins :: 3 points
---                  Draws :: 1 points
---                  Losses :: -1 points
---    (in tournament.py)
+--                    Draws :: 1 points
+--                    Losses :: -1 points
+--                  (in tournament.py)
 
 create view standings as select player.id as id, player.name as name, win_total.wins as wins,
                                 draw_total.draws as draws,

@@ -73,6 +73,12 @@ def playerStandings():
     list_of_players = []
     db_conn = connect()
     db_cursor = db_conn.cursor()
+
+    # use a points system of    win:: 3 points
+    #                           draw:: 1 point
+    #                           loss:: -1 point
+    # to order query
+    # same as in playStandings
     sql_player_standings = (
                 "select id, name, wins, matches"
                 " from standings"
@@ -96,9 +102,8 @@ def reportMatch(winner, loser, draw=False):
     db_conn = connect()
     db_cursor = db_conn.cursor()
     sql_match_report = ('insert into match (winner, loser, draw)'
-                        'values (%s, %s, %s)'
-                        % (winner, loser, draw))
-    db_cursor.execute(sql_match_report)
+                        'values (%s, %s, %s)')
+    db_cursor.execute(sql_match_report, (winner, loser, draw))
     db_conn.commit()
     db_conn.close()
 
@@ -120,17 +125,24 @@ def swissPairings():
     """
     db_conn = connect()
     db_cursor = db_conn.cursor()
+
+    # use a points system of    win:: 3 points
+    #                           draw:: 1 point
+    #                           loss:: -1 point
+    # to order query
     sql_pairings = (
                 "select id, name"
                 "   from standings"
                 "       order by (3*(wins)+(draws)-(losses)) desc;")
     db_cursor.execute(sql_pairings)
+
     # A list of entries is returned to us
     # with each entry as a two-item tuple
     all_players = db_cursor.fetchall()
+
     # I used list comprehensions to:
     #       1.) separate the result pairs into --> a list of singlets.
-    #       2.) then to add them in to--> a list of tuples, each with four entries.
+    #       2.) then to add them in to--> a list of tuples, each with 4 entries.
     #
     # The reason I did not use the "Zip" function is becauese I found it more
     # diffcult to understand than list comphresions and didn't like the
